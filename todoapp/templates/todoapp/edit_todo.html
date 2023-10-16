@@ -1,0 +1,62 @@
+
+<!-- Button trigger modal -->
+<a href="#" data-mdb-toggle="modal" data-mdb-target="#staticBackdrop{{ todo.id }}">
+     <i class="fas fa-pen pe-4"></i>
+</a>
+
+<!-- Modal -->
+<div class="modal fade" id="staticBackdrop{{ todo.id }}" tabindex="-1" aria-labelledby="exampleModalLabel{{ todo.id }}" aria-hidden="true">
+    <div class="modal-dialog d-flex justify-content-center">
+        <div class="modal-content w-75">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel{{ todo.id }}">Редактирование</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form method="post" action="{% url 'update' todo.id %}">
+                    {% csrf_token %}
+                    <!-- Name input -->
+                    <div class="form-outline mb-4">
+                        <input type="text" name="title" id="name{{ todo.id }}" class="form-control" value="{{ todo.title }}" />
+                        <label class="form-label" for="name{{ todo.id }}">Название</label>
+                    </div>
+
+                    <!-- textarea input -->
+                    <div class="form-outline mb-4">
+                        <textarea id="textarea{{ todo.id }}" name="description" rows="4" class="form-control">{{todo.description}}</textarea>
+                        <label class="form-label" for="textarea{{ todo.id }}">Описание</label>
+                    </div>
+
+<!--                     category input -->
+                    <select class="form-select" name="category" aria-label="Default select example">
+                        {% for category in categories_list %}-->
+                            <option value="{{ category.id }}" {% if todo.category_id == category.id %} selected {% endif %} >{{ category.title }}</option>
+                        {% endfor %}
+                    </select>
+                    <br>
+                    {% include 'todoapp/datetimepicker.html' %}
+                    <p></p>
+
+                    <!-- Checkbox -->
+                    <div class="form-check d-flex justify-content-center mb-4">
+                        <input class="form-check-input me-2" type="checkbox" name="is_complete" id="checkbox{{ todo.id }}" {% if todo.is_complete %} checked {% endif %}/>
+                        <label class="form-check-label" for="checkbox{{ todo.id }}">
+                            Выполнено
+                        </label>
+                    </div>
+
+                    <!-- Submit button -->
+                    <button type="submit" name="save-btn" class="btn btn-primary btn-block">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+
+
+
+
+
+

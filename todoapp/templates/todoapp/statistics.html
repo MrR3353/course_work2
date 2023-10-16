@@ -1,0 +1,137 @@
+{% extends 'todoapp/layout.html' %}
+
+{% block content %}
+
+<div class="container py-5">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+    <div class="row my-5">
+        <div class="col">
+            <canvas id="myPieChart" width="400" height="400"></canvas>
+        </div>
+        <div class="col">
+            <canvas id="myBarChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <hr>
+    <div class="row my-5">
+        <div class="col">
+            <canvas id="myDoughnutChart" width="400" height="400"></canvas>
+        </div>
+        <div class="col">
+            <canvas id="myLineChart" width="400" height="400"></canvas>
+        </div>
+    </div>
+    <hr>
+
+<!--    PieChart and BarChart-->
+    <script>
+        var pieData = {{ categories|safe }};
+        var barData = {{ categories|safe }};
+        var doughnutData = {{ completed|safe }};
+        var lineData = {{ todo_times|safe }};
+
+        var ctxPie = document.getElementById('myPieChart').getContext('2d');
+        var ctxBar = document.getElementById('myBarChart').getContext('2d');
+        var ctxDoughnut = document.getElementById('myDoughnutChart').getContext('2d');
+        var ctxLine = document.getElementById('myLineChart').getContext('2d');
+
+        var pieChart = new Chart(ctxPie, {
+            type: 'pie',
+            data: {
+                labels: pieData.labels,
+                datasets: [{
+                    label: 'Количество задач',
+                    data: pieData.values,
+<!--                    backgroundColor: ["#FF5999", "#FFC300", "#33FF57"],-->
+                }]
+            },
+            options: {
+                responsive: true,  // Сделать график адаптивным
+                maintainAspectRatio: false,  // Отключить сохранение соотношения сторон
+                aspectRatio: 1,  // Установить желаемое соотношение сторон (1 = квадрат)
+            }
+        });
+
+        var barChart = new Chart(ctxBar, {
+            type: 'bar',
+            data: {
+                labels: barData.labels,
+                datasets: [{
+                    label: 'Количество задач по категориям',
+                    data: barData.values,
+<!--                    backgroundColor: ["#FF5733", "#FFC300", "#33FF57"],-->
+                }]
+            },
+            options: {
+                responsive: true,  // Сделать график адаптивным
+                maintainAspectRatio: false,  // Отключить сохранение соотношения сторон
+                aspectRatio: 1,  // Установить желаемое соотношение сторон (1 = квадрат)
+            }
+        });
+
+        var pieChart = new Chart(ctxDoughnut, {
+            type: 'doughnut',
+            data: {
+                labels: doughnutData.labels,
+                datasets: [{
+                    label: 'Количество задач',
+                    data: doughnutData.values,
+<!--                    backgroundColor: ["#FF5999", "#FFC300", "#33FF57"],-->
+                }]
+            },
+            options: {
+                responsive: true,  // Сделать график адаптивным
+                maintainAspectRatio: false,  // Отключить сохранение соотношения сторон
+                aspectRatio: 1,  // Установить желаемое соотношение сторон (1 = квадрат)
+            }
+        });
+
+
+
+
+        var myLineChart = new Chart(ctxLine, {
+            type: 'line',
+            data: {
+              labels: lineData.labels,
+              datasets: [
+                {
+                  label: 'Данные по времени',
+                  data: lineData.values,
+                  borderColor: 'rgb(75, 192, 192)',
+                  borderWidth: 1,
+                  fill: false,
+                },
+              ],
+            },
+            options: {
+                responsive: true,  // Сделать график адаптивным
+                maintainAspectRatio: false,  // Отключить сохранение соотношения сторон
+                aspectRatio: 1,  // Установить желаемое соотношение сторон (1 = квадрат)
+                scales: {
+                    x: [
+                      {
+                        type: 'time',
+                        time: {
+<!--                          unit: 'hour',-->
+<!--                          displayFormats: {-->
+<!--                            hour: 'HH:mm', // Формат времени на оси X-->
+<!--                          },-->
+                        },
+                      },
+                    ],
+                    y: [
+                      {
+                        beginAtZero: true,
+                      },
+                    ],
+                }
+            }
+        });
+
+
+    </script>
+
+</div>
+
+{% endblock %}

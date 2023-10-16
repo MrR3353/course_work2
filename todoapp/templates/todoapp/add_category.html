@@ -1,0 +1,40 @@
+
+<!-- Button trigger modal -->
+
+<li class="ms-3 d-flex align-items-center justify-content-center">
+    <a href="#" data-mdb-toggle="modal" data-mdb-target="#add_category">
+        <i class="fas fa-folder-plus fa-lg"></i>
+    </a>
+</li>
+
+<!-- Modal -->
+<div class="modal fade" id="add_category" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+    <div class="modal-dialog d-flex justify-content-center">
+        <div class="modal-content w-75">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Добавить категорию</h5>
+                <button type="button" class="btn-close" data-mdb-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body p-4">
+                <form method="post" action="{% url 'add_category' %}">
+                    {% csrf_token %}
+                    <!-- Name input -->
+                    <div class="form-outline mb-4">
+                        <input type="text" name="name" id="name" class="form-control" autofocus/>
+                        <label class="form-label" for="name">Название</label>
+                    </div>
+                    <!-- Submit button -->
+                    <button type="submit" class="btn btn-primary btn-block">Сохранить</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal -->
+
+
+
+
+
+
+

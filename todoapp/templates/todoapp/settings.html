@@ -1,0 +1,124 @@
+{% extends 'todoapp/layout.html' %}
+
+{% block content %}
+
+
+
+  <section style="background-color: #eee;">
+    <form method="post" action="{% url 'update_settings' %}">
+      {% csrf_token %}
+      <div class="container py-5">
+        <div class="row">
+            <h2>Настройки</h2>
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Логин</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" disabled name="username" class="form-control" value="{{ user.username }}"/>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Почта</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" name="email" class="form-control" value="{{ user.email }}"/>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Телефон</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" name="phone" class="form-control" value="{{ user.profile.phone }}"/>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Адрес</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" name="address" class="form-control" value="{{user.profile.address}}"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+        <div class="row">
+            <h2>Уведомления</h2>
+            <div class="card mb-4">
+              <div class="card-body">
+                <div class="row">
+                  <!-- Checked switch -->
+                  <div class="form-check form-switch">
+                    <label class="form-check-label" for="flexSwitchCheckChecked">Присылать уведомления</label>
+                    <input class="form-check-input" name="is_notifications" type="checkbox" role="switch" id="flexSwitchCheckChecked" {% if user.profile.is_notifications %} checked {% endif %} />
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">Telegram chat id</p>
+                    <a href="https://t.me/task_manager_not1fier_bot">Узнать id</a>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="tg_chat_id_input" name="tg_chat_id" class="form-control" value="{% if user.profile.tg_chat_id %}{{user.profile.tg_chat_id}}{% endif %}"/>
+                  </div>
+                </div>
+                <hr>
+                <div class="row">
+                  <div class="col-sm-3">
+                    <p class="mb-0">За сколько минут присылать уведомление</p>
+                  </div>
+                  <div class="col-sm-9">
+                    <input type="text" id="time_before_notification_input" name="time_before_notification" class="form-control" value="{{ user.profile.time_before_notification }}"/>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+          </div>
+          <div class="text-end">
+            <button type="submit" class="btn btn-primary btn-lg">Сохранить</button>
+          </div>
+      </div>
+    </form>
+
+  </section>
+
+
+<!-- ENABLE/DISABLE input fields if chekbox checked -->
+<script>
+  document.addEventListener("DOMContentLoaded", function() {
+    const checkbox = document.getElementById('flexSwitchCheckChecked');
+    const tgChatIdInput = document.getElementById('tg_chat_id_input');
+    const timeBeforeNotificationInput = document.getElementById('time_before_notification_input');
+
+    // Проверяем состояние чекбокса при загрузке страницы и устанавливаем атрибуты disabled при необходимости.
+    if (!checkbox.checked) {
+      tgChatIdInput.setAttribute('disabled', 'disabled');
+      timeBeforeNotificationInput.setAttribute('disabled', 'disabled');
+    }
+
+    // Добавляем обработчик события для чекбокса
+    checkbox.addEventListener('change', function() {
+      if (checkbox.checked) {
+        tgChatIdInput.removeAttribute('disabled');
+        timeBeforeNotificationInput.removeAttribute('disabled');
+      } else {
+        tgChatIdInput.setAttribute('disabled', 'disabled');
+        timeBeforeNotificationInput.setAttribute('disabled', 'disabled');
+      }
+    });
+  });
+</script>
+
+
+{% endblock %}

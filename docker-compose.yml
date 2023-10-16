@@ -1,0 +1,72 @@
+version: "3.8"
+services:
+  redis:
+    container_name: redis
+    image: redis:latest
+    restart: unless-stopped
+    networks:
+      - todoapp
+    volumes:
+      - ./redis/data:/data
+      - ./redis/redis.conf:/usr/local/etc/redis/redis.conf
+    ports:
+      - "6379:6379"
+    expose:
+      - 6379
+    command: redis-server /usr/local/etc/redis/redis.conf
+
+  app:
+    container_name: app
+    build:
+      context: todoapp
+      dockerfile: Dockerfile
+    env_file:
+      - todoapp/.env
+    entrypoint: sh -c "cd todoapp && python manage.py runserver"
+    volumes:
+      - shared-volume:/src/generated_files
+    networks:
+      - todoapp
+    ports:
+      - 8000:8000
+    depends_on:
+      redis:
+        condition: service_started
+
+  celery:
+    container_name: celery
+    build:
+      context: todoapp
+    entrypoint: sh -c "cd todoapp && celery -A todoapp.celery_task:celery worker --loglevel=INFO --pool=solo"
+    networks:
+      - todoapp
+    env_file:
+      - todoapp/.env
+    depends_on:
+      redis:
+          condition: service_started
+      app:
+        condition: service_started
+
+  celery-beat:
+    container_name: celery-beat
+    build:
+      context: todoapp
+    entrypoint: sh -c "cd todoapp && celery -A todoapp.celery_task:celery beat --loglevel=INFO"
+    networks:
+      - todoapp
+    env_file:
+      - todoapp/.env
+    depends_on:
+      redis:
+        condition: service_started
+      app:
+        condition: service_started
+      celery:
+        condition: service_started
+
+networks:
+  todoapp:
+    name: todoapp
+volumes:
+  shared-volume:
